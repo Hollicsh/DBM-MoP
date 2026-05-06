@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(868, "DBM-Raids-MoP", 1, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod.statTypes = "normal,heroic,mythic,lfr"
+if mod:IsMop() then
+	mod.statTypes = "normal10,normal25,heroic10,heroic25,lfr"
+else
+	mod.statTypes = "normal,heroic,mythic,lfr"
+end
 
 mod:SetRevision("@file-date-integer@")
 mod:DisableHardcodedOptions()
@@ -109,6 +113,7 @@ local function protos(self)
 	timerAddsCD:Start(nil, self.vb.addsCount + 1)
 end
 
+---@param self DBMMod
 local function initialYellMissed(self)
 	if self.vb.addsCount == 0 then
 		self.vb.addsCount = self.vb.addsCount + 1

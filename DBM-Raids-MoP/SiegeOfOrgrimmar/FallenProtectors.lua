@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(849, "DBM-Raids-MoP", 1, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod.statTypes = "normal,heroic,mythic,lfr"
+if mod:IsMop() then
+	mod.statTypes = "normal10,normal25,heroic10,heroic25,lfr"
+else
+	mod.statTypes = "normal,heroic,mythic,lfr"
+end
 
 mod:SetRevision("@file-date-integer@")
 mod:DisableHardcodedOptions()
@@ -90,9 +94,7 @@ local berserkTimer					= mod:NewBerserkTimer(600)
 mod:AddSetIconOption("SetIconOnStrike", 143962, false, 0, {7})
 
 --Upvales, don't need variables
-local UnitExists = UnitExists
 local UnitGUID = UnitGUID
-local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local calamitySpellText = DBM:GetSpellName(143491)
 
 --Not important, don't need to recover
@@ -335,14 +337,14 @@ function mod:UNIT_HEALTH(uId)
 		local hp = UnitHealth(uId) / UnitHealthMax(uId)
 		if hp < 0.71 and self.vb["warned"..cId] == 0 then
 			local bossName = UnitName(uId)
-			if (self:IsTrivial() or self:IsRemix()) and self:AntiSpam(3, 4) then--Throttle on remix or trivial. remix players are zerging boss and it's super spammy
+			if (not self:IsTrivial() or self:IsRemix()) and self:AntiSpam(3, 4) then--Throttle on remix or trivial. remix players are zerging boss and it's super spammy
 				specWarnMeasures:Show(bossName)
 				specWarnMeasures:Play("specialsoon")
 			end
 			self.vb["warned"..cId] = 1
 		elseif hp < 0.37 and self.vb["warned"..cId] == 1 then
 			local bossName = UnitName(uId)
-			if (self:IsTrivial() or self:IsRemix()) and self:AntiSpam(3, 4) then--Throttle on remix or trivial. remix players are zerging boss and it's super spammy
+			if (not self:IsTrivial() or self:IsRemix()) and self:AntiSpam(3, 4) then--Throttle on remix or trivial. remix players are zerging boss and it's super spammy
 				specWarnMeasures:Show(bossName)
 				specWarnMeasures:Play("specialsoon")
 			end
